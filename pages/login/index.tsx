@@ -1,15 +1,14 @@
 import * as React from 'react';
-import styles from '../../styles/login.module.css'
+import { useAppStore } from '../../stores/app-store';
+import styles from '../../styles/login.module.css';
+import FirstFactorLogin from './FirstFactorLogin';
+import SecondStep from './SecondStep';
 
 const Login = () => {
+  const { isFirstFactorSuccessful } = useAppStore();
+
   return <div className={styles['login-wrapper']}>
-    <form action="/api/form" method="post" className={styles['login-form']}>
-      <label>First name:</label>
-      <input type="text" id="first" name="first" />
-      <label >Last name:</label>
-      <input type="text" id="last" name="last" />
-      <button type="submit">Submit</button>
-    </form>
+    {isFirstFactorSuccessful ? <SecondStep/> : <FirstFactorLogin />}
   </div>;
 };
 
