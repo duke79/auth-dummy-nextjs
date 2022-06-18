@@ -1,0 +1,13 @@
+.login-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 300px auto;
+}
+
+.login-form {
+  display: 'grid';
+  grid-template-columns: '1fr 1fr';
+  grid-column-gap: 5ch;
+  grid-row-gap: 1ch;
+}
