@@ -11,6 +11,15 @@ export default function handler(
   res: NextApiResponse<Data>
 ) {
   const { username, password } = (req.body || {}) as FirstFactorRequestArgs;
-  res.status(200).json(req.body);
+  console.log({ cookies: req.cookies });
+  res
+    // .setHeader('Access-Control-Allow-Origin', '*')
+    // .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
+    // .setHeader('Access-Control-Allow-Headers', 'Origin,X-Requested-With,content-type,set-cookie')
+    // .setHeader('Access-Control-Allow-Credentials', 'true')
+    // .setHeader('Access-Control-Expose-Headers', 'Set-Cookie')
+    .setHeader('Set-Cookie', `authToken=abcd; HttpOnly; secure;`)
+    .status(200)
+    .json(req.body);
   // res.status(401).end();
 }

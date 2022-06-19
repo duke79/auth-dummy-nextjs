@@ -32,3 +32,30 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+# Repo
+## Postgres
+```sh
+docker run -d -v /Users/pulkitsingh/dev/auth-dummy:/bitnami/postgresql -e POSTGRESQL_PASSWORD=admin -p 5432:5432 bitnami/postgresql:latest
+```
+
+```sql
+psql -U postgres
+\x auto
+
+CREATE TABLE auth_user (
+  id serial PRIMARY KEY NOT NULL,
+	username VARCHAR(50) UNIQUE NOT NULL,
+	password VARCHAR(50) NOT NULL,
+  phone VARCHAR (50),
+	created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+select * from pg_stat_user_tables;
+
+\dt
+
+INSERT INTO auth_user (username, password, phone) VALUES ('pulkit', 'empty', '82325435234');
+SELECT * from auth_user;
+```
