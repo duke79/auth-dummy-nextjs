@@ -3,19 +3,31 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { FirstFactorRequestArgs } from '../../types/first-factor.types';
 import db_connection from '../../utils/db';
 import argon2 from 'argon2';
+import jwt from 'jsonwebtoken';
 
-type Data = {
+const JWT_TOKEN_KEY = 'THE_PRIVATE_KEY'; // TODO: must come from config
+
+type ResponseData = {
   name: string;
 } | {
   errorMessage?: string;
 };
 
+type JWTData = {
+  username: string;
+};
+
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Data>
+  res: NextApiResponse<ResponseData>
 ) {
   const { username, password } = (req.body || {}) as FirstFactorRequestArgs;
-  console.log({ cookies: req.cookies });
+  // console.log({ cookies: req.cookies });
+  const userFromRequest = jwt.verify(req.cookies.auth, JWT_TOKEN_KEY) as JWTData;
+  // console.log({ userFromRequest });
+  if (userFromRequest.username === username) {
+    res.status(200).json({ errorMessage: 'User already logged in!' });
+  }
 
   try {
     // console.log("req nom", req.body);
@@ -34,13 +46,16 @@ export default async function handler(
       throw new Error('Wrong password!');
     }
 
+    const authToken = jwt.sign({ username } as JWTData, JWT_TOKEN_KEY, {
+      expiresIn: '1d',
+    });
     res
       // .setHeader('Access-Control-Allow-Origin', '*')
       // .setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE')
       // .setHeader('Access-Control-Allow-Headers', 'Origin,X-Requested-With,content-type,set-cookie')
       // .setHeader('Access-Control-Allow-Credentials', 'true')
       // .setHeader('Access-Control-Expose-Headers', 'Set-Cookie')
-      .setHeader('Set-Cookie', `authToken=abcd; HttpOnly; secure;`)
+      .setHeader('Set-Cookie', `auth=${authToken}; HttpOnly; secure;`)
       .status(200)
       .json(record);
     // res.status(401).end();
