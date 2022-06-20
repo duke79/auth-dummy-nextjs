@@ -7,14 +7,16 @@ import {
   ResponseData as MasterDataResponseData
 } from '../types/master-data.types';
 
+const initialState = {
+  hasLoaded: false,
+  username: '',
+  phone: '',
+  roles: [] as string[],
+};
+
 const appStore = atom({
   key: 'app',
-  default: {
-    hasLoaded: false,
-    username: '',
-    phone: '',
-    roles: [] as string[],
-  },
+  default: initialState,
 });
 
 export const useAppStore = () => {
@@ -51,8 +53,13 @@ export const useAppStore = () => {
     }
   };
 
+  const resetMasterData = () => {
+    setState(initialState);
+  };
+
   return {
     ...state,
     getMasterData,
+    resetMasterData,
   };
 };

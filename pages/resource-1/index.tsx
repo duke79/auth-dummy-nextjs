@@ -1,9 +1,10 @@
 import * as React from 'react';
 import AuthHOC from '../../components/AuthHOC';
+import styles from '../../styles/Resource1.module.css';
 
 const Resource1 = () => {
 
-  return <div>
+  return <div className={styles['wrapper']}>
     Resource 1
   </div>;
 };
