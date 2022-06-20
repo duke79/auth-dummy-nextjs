@@ -11,8 +11,7 @@ const AuthHOC = (Component: any, roles: (keyof typeof userRoles)[]) => {
     const app = useAppStore();
     const router = useRouter();
 
-    const isLoggedOut = app.hasLoaded && !app.username;
-    const isLoggedIn = app.hasLoaded && app.username;
+    const atLeastOneRoleAllowed = roles.find(role => app.roles.includes(role))
 
     React.useEffect(() => {
       if (!app.hasLoaded) {
@@ -21,12 +20,10 @@ const AuthHOC = (Component: any, roles: (keyof typeof userRoles)[]) => {
     }, []);
 
     React.useEffect(() => {
-      if (isLoggedOut) {
+      if (app.isLoggedOut) {
         router.push('/login');
       }
-    }, [app.hasLoaded, app.username]);
-
-    const atLeastOneRoleAllowed = roles.find(role => app.roles.includes(role))
+    }, [app.isLoggedOut]);
 
     const renderContent = () => {
       return atLeastOneRoleAllowed ? <Component {...props} /> : <NotFound />;
@@ -38,7 +35,7 @@ const AuthHOC = (Component: any, roles: (keyof typeof userRoles)[]) => {
       </div>;
     };
 
-    return isLoggedIn ? renderContent() : renderLoading();
+    return app.isLoggedIn ? renderContent() : renderLoading();
   };
 
   return AuthenticatedComponent;

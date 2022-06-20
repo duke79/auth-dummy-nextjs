@@ -7,10 +7,8 @@ const SecondStep = () => {
   const { isFirstFactorSuccessful } = useAuthStore();
 
   React.useEffect(() => {
-    if (isFirstFactorSuccessful) {
-      router.push('/');
-    }
-  }, [isFirstFactorSuccessful]);
+    router.push('/');
+  }, []);
 
   return <div>
     <h1>Congratulations!</h1>

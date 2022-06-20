@@ -34,6 +34,9 @@ export const useAppStore = () => {
       axios.post('/api/master-data', body).then((response: any) => {
         const { data } = response || {};
         setState({
+          hasLoaded: false,
+        });
+        setState({
           username: data.username,
           phone: data.phone,
           roles: data.roles,
@@ -59,6 +62,8 @@ export const useAppStore = () => {
 
   return {
     ...state,
+    isLoggedOut: state.hasLoaded && !state.username,
+    isLoggedIn: state.hasLoaded && state.username,
     getMasterData,
     resetMasterData,
   };
