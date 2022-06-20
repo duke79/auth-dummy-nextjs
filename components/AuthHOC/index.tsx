@@ -21,7 +21,7 @@ const AuthHOC = (Component: any, roles: (keyof typeof userRoles)[]) => {
 
     React.useEffect(() => {
       if (app.isLoggedOut) {
-        router.push('/login');
+        router.push(`/login?redirectTo=${router.route}`);
       }
     }, [app.isLoggedOut]);
 

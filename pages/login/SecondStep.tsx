@@ -4,16 +4,16 @@ import { useAuthStore } from '../../stores/auth-store';
 
 const SecondStep = () => {
   const router = useRouter();
-  const { isFirstFactorSuccessful } = useAuthStore();
+  const redirectTo = router.query.redirectTo as string || '/';
 
   React.useEffect(() => {
-    router.push('/');
+    router.push(redirectTo);
   }, []);
 
   return <div>
     <h1>Congratulations!</h1>
     <p>You have sucessfully logged in!</p>
-    <p>Redirecting...</p>
+    <p>Redirecting to .... ${redirectTo}</p>
   </div>;
 };
 
