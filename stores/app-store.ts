@@ -10,6 +10,7 @@ import {
 const appStore = atom({
   key: 'app',
   default: {
+    hasLoaded: false,
     username: '',
     phone: '',
     roles: [] as string[],
@@ -34,9 +35,18 @@ export const useAppStore = () => {
           username: data.username,
           phone: data.phone,
           roles: data.roles,
+          hasLoaded: true,
         });
+      }).catch((error) => {
+        setState({
+          hasLoaded: true,
+        });
+        console.error({ error });
       });
     } catch (error) {
+      setState({
+        hasLoaded: true,
+      });
       console.error({ error });
     }
   };

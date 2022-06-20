@@ -12,11 +12,14 @@ export default async function handler(
   res: NextApiResponse<ResponseData>
 ) {
   const { username, password } = (req.body || {}) as RequestArgs;
-  // console.log({ cookies: req.cookies });
-  const userFromRequest = jwt.verify(req.cookies.auth, JWT_TOKEN_KEY) as JWTData;
-  // console.log({ userFromRequest });
-  if (userFromRequest.username === username) {
-    res.status(200).json({ errorMessage: 'User already logged in!' });
+
+  if (req.cookies.auth) {
+    // console.log({ cookies: req.cookies });
+    const userFromRequest = jwt.verify(req.cookies.auth, JWT_TOKEN_KEY) as JWTData;
+    // console.log({ userFromRequest });
+    if (userFromRequest.username === username) {
+      res.status(200).json({ errorMessage: 'User already logged in!' });
+    }
   }
 
   try {

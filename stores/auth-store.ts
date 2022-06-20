@@ -34,8 +34,19 @@ export const useAuthStore = () => {
     }
   };
 
+  const postLogout = async () => {
+    try {
+      axios.post('/api/logout', {}).then((response) => {
+        setState({ isFirstFactorSuccessful: false });
+      });
+    } catch (error) {
+      console.error({ error });
+    }
+  };
+
   return {
     ...state,
     postFirstFactor,
+    postLogout,
   };
 };
