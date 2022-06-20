@@ -2,12 +2,17 @@ import axios from 'axios';
 import { atom } from 'recoil';
 import { useEffect } from 'react';
 import useGenericRecoilState from '../hooks/useGenericRecoilState';
-import { FirstFactorRequestArgs } from '../types/first-factor.types';
+import {
+  RequestArgs as MasterDataRequestArgs,
+  ResponseData as MasterDataResponseData
+} from '../types/master-data.types';
 
 const appStore = atom({
   key: 'app',
   default: {
-    isFirstFactorSuccessful: false,
+    username: '',
+    phone: '',
+    roles: [] as string[],
   },
 });
 
@@ -21,10 +26,15 @@ export const useAppStore = () => {
     //   that could trigger duplicate effects
   }, []);
 
-  const postFirstFactor = async (body: FirstFactorRequestArgs) => {
+  const getMasterData = async (body: MasterDataRequestArgs) => {
     try {
-      axios.post('/api/first-factor', body).then(response => {
-        setState({ isFirstFactorSuccessful: true });
+      axios.post('/api/master-data', body).then((response: any) => {
+        const { data } = response || {};
+        setState({
+          username: data.username,
+          phone: data.phone,
+          roles: data.roles,
+        });
       });
     } catch (error) {
       console.error({ error });
@@ -33,6 +43,6 @@ export const useAppStore = () => {
 
   return {
     ...state,
-    postFirstFactor,
+    getMasterData,
   };
 };

@@ -1,10 +1,10 @@
 import { Button, Form, Input } from 'antd';
 import * as React from 'react';
-import { useAppStore } from '../../stores/app-store';
-import { FirstFactorRequestArgs } from '../../types/first-factor.types';
+import { useAuthStore } from '../../stores/auth-store';
+import { RequestArgs as FirstFactorRequestArgs } from '../../types/first-factor.types';
 
 const FirstFactorLogin = () => {
-  const app = useAppStore();
+  const app = useAuthStore();
   const onFinish = async (values: FirstFactorRequestArgs) => {
     await app.postFirstFactor(values);
   };

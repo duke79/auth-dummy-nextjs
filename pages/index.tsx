@@ -2,9 +2,16 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useEffect } from 'react'
+import { useAppStore } from '../stores/app-store'
 import styles from '../styles/Home.module.css'
 
 const Home: NextPage = () => {
+  const app = useAppStore();
+  useEffect(() => {
+    app.getMasterData({});
+  }, []);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -17,6 +24,15 @@ const Home: NextPage = () => {
         <h1 className={styles.title}>
           Welcome to <a href="https://nextjs.org">Next.js!</a>
         </h1>
+
+        <h2>
+          Roles:
+        </h2>
+        <p>
+          {app.roles.map(role => <div>
+            {role}
+          </div>)}
+        </p>
 
         <p className={styles.description}>
           Try <Link href="/login">

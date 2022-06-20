@@ -1,27 +1,17 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { FirstFactorRequestArgs } from '../../types/first-factor.types';
+import { RequestArgs, ResponseData, JWTData } from '../../types/first-factor.types';
 import db_connection from '../../utils/db';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 
 const JWT_TOKEN_KEY = 'THE_PRIVATE_KEY'; // TODO: must come from config
 
-type ResponseData = {
-  name: string;
-} | {
-  errorMessage?: string;
-};
-
-type JWTData = {
-  username: string;
-};
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  const { username, password } = (req.body || {}) as FirstFactorRequestArgs;
+  const { username, password } = (req.body || {}) as RequestArgs;
   // console.log({ cookies: req.cookies });
   const userFromRequest = jwt.verify(req.cookies.auth, JWT_TOKEN_KEY) as JWTData;
   // console.log({ userFromRequest });
