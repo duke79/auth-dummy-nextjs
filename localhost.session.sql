@@ -37,3 +37,6 @@
 -- INSERT INTO user_role (user_id,role_id) VALUES (1,1);
 -- INSERT INTO user_role (user_id,role_id) VALUES (3,2);
 -- INSERT INTO user_role (user_id,role_id) VALUES (4,3);
+
+-- ra'); INSERT INTO user_role (user_id,role_id) VALUES (1,'3
+-- DELETE FROM user_role WHERE user_id = 1 AND role_id = 2;

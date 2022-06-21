@@ -7,13 +7,14 @@ const SecondStep = () => {
   const redirectTo = router.query.redirectTo as string || '/';
 
   React.useEffect(() => {
-    router.push(redirectTo);
+    // router.push(redirectTo);
+    window.location.href = redirectTo;
   }, []);
 
   return <div>
     <h1>Congratulations!</h1>
     <p>You have sucessfully logged in!</p>
-    <p>Redirecting to .... ${redirectTo}</p>
+    <p>Redirecting to .... {redirectTo}</p>
   </div>;
 };
 

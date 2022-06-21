@@ -4,6 +4,7 @@ import { RequestArgs, ResponseData, JWTData } from '../../types/first-factor.typ
 import db_connection from '../../utils/db';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
+import SQL from 'sql-template-strings';
 
 const JWT_TOKEN_KEY = 'THE_PRIVATE_KEY'; // TODO: must come from config
 
@@ -24,8 +25,8 @@ export default async function handler(
 
   try {
     // console.log("req nom", req.body);
-    const query = `SELECT * from auth_user 
-        WHERE username=lower('${username}')`;
+    const query = SQL`SELECT * from auth_user 
+        WHERE username=lower(${username})`;
         // AND password='${await argon2.hash(password)}'`;
     // console.log({ query });
     const { rows } = await db_connection.query(query);

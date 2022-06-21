@@ -19,6 +19,7 @@
     "react-dom": "18.2.0",
     "recoil": "^0.7.3",
     "reflect-metadata": "^0.1.13",
+    "sql-template-strings": "^2.2.2",
     "typeorm": "^0.3.6"
   },
   "devDependencies": {

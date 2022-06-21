@@ -5,6 +5,7 @@ import db_connection from '../../utils/db';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import { RequestArgs, ResponseData } from '../../types/master-data.types';
+import SQL from 'sql-template-strings';
 
 const JWT_TOKEN_KEY = 'THE_PRIVATE_KEY'; // TODO: must come from config
 
@@ -26,18 +27,18 @@ export default async function handler(
   }
 
   try {
-    const queryGetUserByUsername = `SELECT username, phone from auth_user 
-        WHERE username=lower('${username}')`;
+    const queryGetUserByUsername = SQL`SELECT username, phone from auth_user 
+        WHERE username=lower(${username})`;
     const resGetUserByUsername = await db_connection.query(queryGetUserByUsername);
     if (!resGetUserByUsername.rows.length) {
       throw new Error('Empty record!');
     }
     const { phone } = resGetUserByUsername.rows[0];
 
-    const queryGetUserRoles = `SELECT role.title FROM role 
+    const queryGetUserRoles = SQL`SELECT role.title FROM role 
       JOIN user_role ON role.id = user_role.role_id
       JOIN auth_user ON auth_user.id = user_role.user_id
-      WHERE auth_user.username = '${username}';`;
+      WHERE auth_user.username = ${username};`;
     const resGetUserRoles = await db_connection.query(queryGetUserRoles);
     if (!resGetUserRoles.rows.length) {
       throw new Error('Empty record!');
