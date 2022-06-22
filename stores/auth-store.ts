@@ -1,16 +1,21 @@
 import axios from 'axios';
-import { atom } from 'recoil';
 import { useEffect } from 'react';
+import { atom } from 'recoil';
 import useGenericRecoilState from '../hooks/useGenericRecoilState';
 import {
   RequestArgs as FirstFactorRequestArgs,
   ResponseData as FirstFactorResponseData
 } from '../types/first-factor.types';
+import {
+  RequestArgs as SecondFactorRequestArgs
+} from '../types/second-factor.types';
 
 const authStore = atom({
   key: 'auth',
   default: {
+    isTwoFactorEnabled: false,
     isFirstFactorSuccessful: false,
+    isSecondFactorSuccessful: false,
   },
 });
 
@@ -27,7 +32,21 @@ export const useAuthStore = () => {
   const postFirstFactor = async (body: FirstFactorRequestArgs) => {
     try {
       axios.post('/api/first-factor', body).then((response) => {
-        setState({ isFirstFactorSuccessful: true });
+        const data = response.data as FirstFactorResponseData;
+        setState({
+          isFirstFactorSuccessful: true,
+          isTwoFactorEnabled: data.isTwoFactorEnabled,
+        });
+      });
+    } catch (error) {
+      console.error({ error });
+    }
+  };
+
+  const postSecondFactor = async (body: SecondFactorRequestArgs) => {
+    try {
+      axios.post('/api/second-factor', body).then((response) => {
+        setState({ isSecondFactorSuccessful: true });
       });
     } catch (error) {
       console.error({ error });
@@ -47,6 +66,7 @@ export const useAuthStore = () => {
   return {
     ...state,
     postFirstFactor,
+    postSecondFactor,
     postLogout,
   };
 };

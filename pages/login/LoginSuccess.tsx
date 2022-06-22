@@ -2,8 +2,9 @@ import { useRouter } from 'next/router';
 import * as React from 'react';
 import { useAuthStore } from '../../stores/auth-store';
 
-const SecondStep = () => {
+const LoginSuccess = () => {
   const router = useRouter();
+  const auth = useAuthStore();
   const redirectTo = router.query.redirectTo as string || '/';
 
   React.useEffect(() => {
@@ -18,4 +19,4 @@ const SecondStep = () => {
   </div>;
 };
 
-export default SecondStep;
+export default LoginSuccess;

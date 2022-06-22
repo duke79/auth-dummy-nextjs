@@ -4,11 +4,12 @@ export interface RequestArgs {
 }
 
 export type ResponseData = {
-  name: string;
-} | {
+  name?: string;
+  isTwoFactorEnabled?: boolean;
   errorMessage?: string;
 };
 
 export type JWTData = {
   username: string;
+  phone?: string;
 };
