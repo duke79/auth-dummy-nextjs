@@ -1,11 +1,11 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { JWTData } from '../../types/first-factor.types';
-import db_connection from '../../utils/db';
-import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
 import { RequestArgs, ResponseData } from '../../types/master-data.types';
-import SQL from 'sql-template-strings';
+import { sqlQuery } from '../../utils/db';
+import { User } from '../../utils/db/entity/user';
+import { Role } from '../../utils/db/entity/role';
 
 const JWT_TOKEN_KEY = 'THE_PRIVATE_KEY'; // TODO: must come from config
 
@@ -27,22 +27,9 @@ export default async function handler(
   }
 
   try {
-    const queryGetUserByUsername = SQL`SELECT username, phone from auth_user 
-        WHERE username=lower(${username})`;
-    const resGetUserByUsername = await db_connection.query(queryGetUserByUsername);
-    if (!resGetUserByUsername.rows.length) {
-      throw new Error('Empty record!');
-    }
+    const resGetUserByUsername = await User.getUserByUserName(username);
     const { phone } = resGetUserByUsername.rows[0];
-
-    const queryGetUserRoles = SQL`SELECT role.title FROM role 
-      JOIN user_role ON role.id = user_role.role_id
-      JOIN auth_user ON auth_user.id = user_role.user_id
-      WHERE auth_user.username = ${username};`;
-    const resGetUserRoles = await db_connection.query(queryGetUserRoles);
-    if (!resGetUserRoles.rows.length) {
-      throw new Error('Empty record!');
-    }
+    const resGetUserRoles = await Role.getUserRolesByUserName(username);
     const resRoles = resGetUserRoles.rows as [{ title: string }];
     const roles = resRoles.map(e => e.title);
 

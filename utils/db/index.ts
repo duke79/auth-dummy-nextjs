@@ -25,8 +25,9 @@
 
 // db.js
 import { Pool } from "pg";
+import SQL from "sql-template-strings";
 
-let conn;
+let conn: Pool | undefined;
 
 if (!conn) {
   conn = new Pool({
@@ -38,4 +39,17 @@ if (!conn) {
   });
 }
 
-export default conn as Pool;
+export const sqlQuery = async (queryStr: string) => {
+  try {
+    console.log({ queryStr });
+    const res = await conn?.query(SQL([queryStr]));
+    console.log({ records: res?.rows });
+    // if (!res?.rows.length) {
+    //   throw new Error('Empty record!');
+    // }
+    return res; 
+  } catch(error) {
+    console.error({ error });
+    throw new Error('SQL error!');
+  }
+};

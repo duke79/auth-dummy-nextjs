@@ -1,10 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { RequestArgs, ResponseData, JWTData } from '../../types/first-factor.types';
-import db_connection from '../../utils/db';
 import argon2 from 'argon2';
 import jwt from 'jsonwebtoken';
-import SQL from 'sql-template-strings';
+import { User } from '../../utils/db/entity/user';
 
 const JWT_TOKEN_KEY = 'THE_PRIVATE_KEY'; // TODO: must come from config
 
@@ -25,17 +24,9 @@ export default async function handler(
 
   try {
     // console.log("req nom", req.body);
-    const query = SQL`SELECT * from auth_user 
-        WHERE username=lower(${username})`;
-        // AND password='${await argon2.hash(password)}'`;
-    // console.log({ query });
-    const { rows } = await db_connection.query(query);
-    
-    if (!rows.length) {
-      throw new Error('Empty record!');
-    }
+    const users = await User.getUserByUserName(username);
 
-    const record = rows[0];
+    const record = users?.rows[0];
     if (!await argon2.verify(record.password, password)) {
       throw new Error('Wrong password!');
     }

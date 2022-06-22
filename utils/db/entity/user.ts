@@ -1,24 +1,35 @@
 import { Entity, Column, PrimaryGeneratedColumn } from "typeorm"
+import { sqlQuery } from ".."
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number
+  @PrimaryGeneratedColumn()
+  id: number
 
-    @Column({
-        length: 100,
-    })
-    name: string
+  @Column({
+    length: 100,
+  })
+  name: string
 
-    @Column("text")
-    description: string
+  @Column("text")
+  description: string
 
-    @Column()
-    filename: string
+  @Column()
+  filename: string
 
-    @Column("double")
-    views: number
+  @Column("double")
+  views: number
 
-    @Column()
-    isPublished: boolean
+  @Column()
+  isPublished: boolean
+
+  static async getUserByUserName(username: string) {
+    const query = `SELECT * from auth_user 
+        WHERE username=lower('${username}')`;    
+    const res = await sqlQuery(query);
+    if (!res?.rows.length) {
+      throw new Error('Empty record!');
+    }
+    return res;
+  }
 }
