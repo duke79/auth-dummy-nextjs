@@ -29,10 +29,17 @@ export default async function handler(
 
   try {
     const resGetUserByUsername = await User.getUserByUserName(username);
+    const record = resGetUserByUsername.rows[0];
 
-    if (!otp) {
+    if (otp !== record.otp) {
+      console.error({ otp, record });
       throw new Error('Wrong otp!');
     }
+
+    User.updateOtp({
+      username,
+      otp,
+    });
 
     const { phone } = resGetUserByUsername.rows[0];
 

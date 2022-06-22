@@ -4,7 +4,6 @@ import { config } from '../config';
 import { JWTData } from '../types/first-factor.types';
 
 export const getFreshJwtToken = (options: JWTData) => {
-  console.log({ config })
   const authToken = jwt.sign(options, config.jwtTokenKey, {
     expiresIn: '1h',
   });

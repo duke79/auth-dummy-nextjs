@@ -25,7 +25,21 @@ export class User {
 
   static async getUserByUserName(username: string) {
     const query = `SELECT * from auth_user 
-        WHERE username=lower('${username}')`;    
+        WHERE username=lower('${username}')`;
+    const res = await sqlQuery(query);
+    if (!res?.rows.length) {
+      throw new Error('Empty record!');
+    }
+    return res;
+  }
+
+  static async updateOtp(args: {
+    otp: string;
+    username: string;
+  }) {
+    const { otp, username } = args;
+    const query = `UPDATE auth_user SET otp='${otp}'
+        WHERE username=lower('${username}')`;
     const res = await sqlQuery(query);
     if (!res?.rows.length) {
       throw new Error('Empty record!');

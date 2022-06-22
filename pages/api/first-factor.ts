@@ -33,11 +33,15 @@ export default async function handler(
     }
 
     if (config.isTwoFactorEnabled) {
-      const smsRes = await sendSMS({
-        to: '+918237384898',
-        body: 'Hi',
+      const randomOtp = Math.random().toString().slice(2,8);
+      User.updateOtp({
+        username,
+        otp: randomOtp,
       });
-      console.log({ smsRes });
+      await sendSMS({
+        to: record.phone,
+        body: `Your OTP is - ${randomOtp}`,
+      });
     }
 
     const authToken = getFreshJwtToken({ username });
